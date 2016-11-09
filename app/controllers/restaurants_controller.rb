@@ -1,47 +1,41 @@
 class RestaurantsController < ApplicationController
-
-  def create
-    @restaurant = Restaurant.new(restaurant_params)
-    if @restaurant.save
-      redirect_to restaurant_path(@restaurant)
-    else
-      render :new
-    end
-  end
-
-  def top
-   @restaurants = Restaurant.where(stars: 3)
-  end
-
-  def update if @restaurant.update(restaurant_params)
-    redirect_to restaurant_path(@restaurant)
-    else render :edit
-    end
-  end
-
+before_action only: [:show, :edit, :update, :destroy]
   def index
     @restaurants = Restaurant.all
   end
 
-  def name
+  def show
+    @restaurant = Restaurant.find(params[:id])
   end
 
-  def adresse
+  def new
+    @restaurant = Restaurant.new
   end
 
-  def phone_number
+  def create
+    @restaurant = Restaurant.create(restaurant_params)
+    redirect_to @restaurant
   end
 
-  def category
+  def edit
+    @restaurant = Restaurant.find(params[:id])
   end
 
-  def review:text
+  def update
+    @restaurant = Restaurant.find(params[:id])
+    @restaurant.update(restaurant_params)
+    redirect_to restaurant_path(@restaurant)
   end
 
-  private
+  def destroy
+    @restaurant = Restaurant.find(params[:id])
+    @restaurant.destroy
+    redirect_to restaurants_path
+  end
 
   def restaurant_params
-    params.require(:restaurant).permit(:name, :address)
+    # *Strong params*: You need to *whitelist* what can be updated by the user
+    # Never trust user data!
+    params.require(:restaurant).permit(:name, :address, :phone_number, :category)
   end
-
 end

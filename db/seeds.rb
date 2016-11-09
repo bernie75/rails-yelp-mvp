@@ -6,24 +6,10 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 Restaurant.destroy_all
-restaurants_attributes = [
-  {
-    name:         "Epicure au Bristol",
-    address:      "112 rue du Fg St-Honoré 75008 Paris",
-    category:     "",
-    phone_number: ""
-  },
-  {
-    name:         "La truffière",
-    address:      "4 rue Blainville 75005 Paris",
-    category:     "",
-    phone_number: ""
-  },
-  {
-    name:         "Le pré catelan",
-    address:      "route de Suresnes 75016 Paris",
-    category:     "",
-    phone_number: ""
-  }
-]
-restaurants_attributes.each { |params| Restaurant.create!(params) }
+20.times do |time|
+  resto = Restaurant.create(name: Faker::Company.name ,address: Faker::Address.street_name, phone_number: Faker::PhoneNumber.phone_number, category: ["chinese", "italian", "japanese", "french", "belgian"][rand(5)])
+  rand(0..5).times do |i|
+    review = resto.reviews.new(content: Faker::Company.name , rating: rand(0..5), restaurant_id: rand(1..20))
+    review.save
+  end
+end
